@@ -1,0 +1,2 @@
+1. npm run dev OR  npm run watch
+2. php -S localhost:82 -t public/
