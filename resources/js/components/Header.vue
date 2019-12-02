@@ -12,75 +12,74 @@
                 <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li class="active"><router-link to="/">Home <span class="sr-only">(current)</span></router-link></li>
-                        <li><router-link :to="{ name: 'outlets.data' }">Outlets</router-link></li>
-			<li><router-link :to="{ name: 'couriers.data' }">Courier</router-link></li>
-                        <li><router-link :to="{ name: 'products.data' }">Products</router-link></li>
+                        <li v-if="$can('read outlets')"><router-link :to="{ name: 'outlets.data' }">Outlets</router-link></li>
+			<li v-if="$can('read couriers')"><router-link :to="{ name: 'couriers.data' }">Couriers</router-link></li>
+                        <li v-if="$can('read products')"><router-link :to="{ name: 'products.data' }">Products</router-link></li>
+                        <li><router-link :to="{ name: 'expenses.data' }">Expenses</router-link></li>
+                        <li><router-link :to="{ name: 'customers.data' }">Customer</router-link></li>
+                        <li class="dropdown">
+                            <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Transactions <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><router-link :to="{ name: 'transactions.list' }">List</router-link></li>
+                                <li><router-link :to="{ name: 'transactions.add' }">Add New</router-link></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown" v-if="authenticated.role == 0">
+                            <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Settings <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><router-link :to="{name: 'role.permissions'}">Role Permission</router-link></li>
+                            </ul>
+                        </li>
                     </ul>
-                    <form class="navbar-form navbar-left" role="search">
-                        <div class="form-group">
-                            <input type="text" class="form-control" id="navbar-search-input" placeholder="Search">
-                        </div>
-                    </form>
                 </div>
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
                         <li class="dropdown messages-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-envelope-o"></i>
-                                <span class="label label-success">4</span>
+                                <i class="fa fa-bell-o"></i>
+
+                                <!-- FUNGSI INI UNTUK MENGHITUNG JUMLAH DATA NOTIFIKASI YANG ADA -->
+                                <span class="label label-success">{{ notifications.length }}</span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li class="header">You have 4 messages</li>
+                                <li class="header">You have {{ notifications.length }} messages</li>
                                 <li>
-                                    <ul class="menu">
-                                        <li>
-                                            <a href="#">
+                                    <ul class="menu" v-if="notifications.length > 0">
+
+                                        <!-- KITA MELAKUKAN LOOPING TERHADAP DATA NOTIFIKASI YANG DISIMPAN KE DALAM STATE NOTIFICATIONS -->
+                                        <li v-for="(row, index) in notifications" :key="index">
+                                            <a href="javascript:void(0)" @click="readNotif(row)">
                                                 <div class="pull-left">
                                                     <img src="https://via.placeholder.com/160" class="img-circle" alt="User Image">
                                                 </div>
                                                 <h4>
-                                                    Support Team
-                                                    <small><i class="fa fa-clock-o"></i> 5 mins</small>
+                                                    <!-- TAMPILKAN NAMA PENGIRIM NOTIFIKASI -->
+                                                    {{ row.data.sender_name }}
+                                                    <!-- TAMPILKAN WAKTU NOTIFIKASI -->
+                                                    <small><i class="fa fa-clock-o"></i> {{ row.created_at | formatDate }}</small>
                                                 </h4>
-                                                <p>Why not buy a new awesome theme?</p>
+                                                <!-- TAMPILKAN JENIS PERMINTAAN NOTIFIKASI -->
+                                                <p>{{ row.data.expenses.description.substr(0, 30) }}</p>
                                             </a>
                                         </li>
                                     </ul>
                                 </li>
-                                <li class="footer"><a href="#">See All Messages</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown notifications-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-bell-o"></i>
-                                <span class="label label-warning">10</span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li class="header">You have 10 notifications</li>
-                                <li>
-                                    <ul class="menu">
-                                        <li>
-                                            <a href="#">
-                                                <i class="fa fa-users text-aqua"></i> 5 new members joined today
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="footer"><a href="#">View all</a></li>
+                                <!-- <li class="footer"><a href="#">See All Messages</a></li> -->
                             </ul>
                         </li>
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <img src="https://via.placeholder.com/160" class="user-image" alt="User Image">
-                                <span class="hidden-xs">Jhon Doe</span>
+                                <span class="hidden-xs">{{ authenticated.name }}</span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li class="user-header">
                                     <img src="https://via.placeholder.com/160" class="img-circle" alt="User Image">
-                                    <p>Jhon Doe - Web Developer <small>Member since Nov. 2019</small></p>
+                                     <p>{{ authenticated.name }}</p>
                                 </li>
                                 <li class="user-body">
                                     <div class="row">
+                                        <!--
                                         <div class="col-xs-4 text-center">
                                             <a href="#">Followers</a>
                                         </div>
@@ -90,6 +89,7 @@
                                         <div class="col-xs-4 text-center">
                                             <a href="#">Friends</a>
                                         </div>
+                                        -->
                                     </div>
                                 </li>
                                 <li class="user-footer">

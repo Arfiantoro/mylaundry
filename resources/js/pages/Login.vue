@@ -60,11 +60,12 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['isAuth']), //MENGAMBIL GETTERS isAuth DARI VUEX
+        ...mapGetters(['isAuth']),
       	...mapState(['errors'])
     },
     methods: {
         ...mapActions('auth', ['submit']), //MENGISIASI FUNGSI submit() DARI VUEX AGAR DAPAT DIGUNAKAN PADA COMPONENT TERKAIT. submit() BERASAL DARI ACTION PADA FOLDER STORES/auth.js
+        ...mapActions('user', ['getUserLogin']),
         ...mapMutations(['CLEAR_ERRORS']),
       
       	//KETIKA TOMBOL LOGIN DITEKAN, MAKA AKAN MEMINCU METHODS postLogin()
@@ -80,6 +81,9 @@ export default {
                 }
             })
         }
+    },
+    destroyed() {
+        this.getUserLogin()
     }
 }
 </script>

@@ -14,13 +14,32 @@ import Vue from 'vue'
         import DataCouriers from './pages/couriers/Courier.vue'
         import AddCouriers from './pages/couriers/Add.vue'
         import EditCouriers from './pages/couriers/Edit.vue'
-        
+
         import IndexProduct from './pages/products/Index.vue'
         import DataProduct from './pages/products/Product.vue'
         import AddProduct from './pages/products/Add.vue'
         import EditProduct from './pages/products/Edit.vue'
 
-        Vue.use(Router)
+        import Setting from './pages/setting/Index.vue'
+        import SetPermission from './pages/setting/roles/SetPermission.vue'
+
+        import IndexExpenses from './pages/expenses/Index.vue'
+        import DataExpenses from './pages/expenses/Expenses.vue'
+        import CreateExpenses from './pages/expenses/Add.vue'
+        import ViewExpenses from './pages/expenses/View.vue'
+        import EditExpenses from './pages/expenses/Edit.vue'
+
+        import IndexCustomer from './pages/customers/Index.vue'
+        import DataCustomer from './pages/customers/Customer.vue'
+        import AddCustomer from './pages/customers/Add.vue'
+        import EditCustomer from './pages/customers/Edit.vue'
+        
+import IndexTransaction from './pages/transaction/Index.vue'
+import AddTransaction from './pages/transaction/Add.vue'
+import ViewTransaction from './pages/transaction/View.vue'
+import ListTransaction from './pages/transaction/List.vue'
+
+Vue.use(Router)
 
 //DEFINE ROUTE
 const router = new Router({
@@ -109,6 +128,100 @@ const router = new Router({
                     name: 'products.edit',
                     component: EditProduct,
                     meta: {title: 'Edit Product'}
+                },
+            ]
+        },
+        {
+            path: '/setting',
+            component: Setting,
+            meta: {requiresAuth: true},
+            children: [
+                {
+                    path: 'role-permission',
+                    name: 'role.permissions',
+                    component: SetPermission,
+                    meta: {title: 'Set Permissions'}
+                },
+            ]
+        },
+        {
+            path: '/expenses',
+            component: IndexExpenses,
+            meta: {requiresAuth: true},
+            children: [
+                {
+                    path: '',
+                    name: 'expenses.data',
+                    component: DataExpenses,
+                    meta: {title: 'Manage Expenses'}
+                },
+                {
+                    path: 'add',
+                    name: 'expenses.create',
+                    component: CreateExpenses,
+                    meta: {title: 'Add New Expenses'}
+                },
+                {
+                    path: 'view/:id',
+                    name: 'expenses.view',
+                    component: ViewExpenses,
+                    meta: {title: 'View Expenses'}
+                },
+                {
+                    path: 'edit/:id',
+                    name: 'expenses.edit',
+                    component: EditExpenses,
+                    meta: {title: 'Edit Expenses'}
+                },
+            ]
+        },
+        {
+            path: '/customers',
+            component: IndexCustomer,
+            meta: {requiresAuth: true},
+            children: [
+                {
+                    path: '',
+                    name: 'customers.data',
+                    component: DataCustomer,
+                    meta: {title: 'Manage Customers'}
+                },
+                {
+                    path: 'add',
+                    name: 'customers.add',
+                    component: AddCustomer,
+                    meta: {title: 'Add New Customers'}
+                },
+                {
+                    path: 'edit/:id',
+                    name: 'customers.edit',
+                    component: EditCustomer,
+                    meta: {title: 'Edit Customer'}
+                },
+            ]
+        },
+        {
+            path: '/transactions',
+            component: IndexTransaction,
+            meta: {requiresAuth: true},
+            children: [
+                {
+                    path: 'create',
+                    name: 'transactions.add',
+                    component: AddTransaction,
+                    meta: {title: 'Create New Transaction'}
+                },
+                {
+                    path: 'view/:id',
+                    name: 'transactions.view',
+                    component: ViewTransaction,
+                    meta: { title: 'View Transaction' }
+                },
+                {
+                    path: 'list',
+                    name: 'transactions.list',
+                    component: ListTransaction,
+                    meta: { title: 'List Transaction' }
                 },
             ]
         }
